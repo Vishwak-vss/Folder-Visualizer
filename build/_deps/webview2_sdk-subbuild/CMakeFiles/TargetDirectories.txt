@@ -1,3 +1,0 @@
-C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/webview2_sdk-subbuild/CMakeFiles/webview2_sdk-populate.dir
-C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/webview2_sdk-subbuild/CMakeFiles/ALL_BUILD.dir
-C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/webview2_sdk-subbuild/CMakeFiles/ZERO_CHECK.dir
