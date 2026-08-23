@@ -29,7 +29,7 @@ file-percentage-viewer/
 ├── styles.py                # Application styling & QSS themes
 ├── tree_widget.py           # Custom QTreeWidget for file/folder hierarchies
 └── requirements.txt         # Python dependency manifest
-
+```
 # Run these commands
 g++ -O3 -shared -o folder_scanner.dll folder_scanner.cpp     -static -static-libgcc -static-libstdc++
 pip install PyQt6 matplotlib adjustText
