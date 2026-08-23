@@ -1,129 +1,17 @@
 import sys
+import os
+import string
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QFileDialog, QTreeWidget, QTreeWidgetItem,
-    QProgressBar, QLabel, QSplitter, QHeaderView, QFrame
+    QApplication, QMainWindow, QWidget, QVBoxLayout,
+    QProgressBar, QLabel, QSplitter, QFrame, QTreeWidgetItem
 )
-from PyQt6.QtGui import QColor
 
-from scanner import ScanWorker
+from styles import DARK_THEME_QSS
+from header_card import HeaderCard
+from tree_widget import StorageTreeWidget
 from chart import StorageChartCanvas
-
-# Modern Dark QSS Stylesheet
-DARK_THEME_QSS = """
-QMainWindow {
-    background-color: #121212;
-}
-
-QWidget {
-    color: #E0E0E0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-}
-
-/* Card Container Styling */
-QFrame#Card {
-    background-color: #1E1E1E;
-    border: 1px solid #2D2D2D;
-    border-radius: 8px;
-    padding: 12px;
-}
-
-/* Header & Status Labels */
-QLabel#Title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #FFFFFF;
-}
-
-QLabel#SectionTitle {
-    font-size: 14px;
-    font-weight: 600;
-    color: #FFFFFF;
-    padding-bottom: 4px;
-}
-
-QLabel#Status {
-    color: #9E9E9E;
-    font-size: 13px;
-}
-
-/* Primary Button */
-QPushButton#BrowseBtn {
-    background-color: #2563EB;
-    color: #FFFFFF;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 18px;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-QPushButton#BrowseBtn:hover {
-    background-color: #3B82F6;
-}
-
-QPushButton#BrowseBtn:pressed {
-    background-color: #1D4ED8;
-}
-
-QPushButton#BrowseBtn:disabled {
-    background-color: #334155;
-    color: #64748B;
-}
-
-/* Progress Bar */
-QProgressBar {
-    border: none;
-    background-color: #2A2A2A;
-    height: 4px;
-    border-radius: 2px;
-}
-
-QProgressBar::chunk {
-    background-color: #3B82F6;
-    border-radius: 2px;
-}
-
-/* Tree Widget Styling */
-QTreeWidget {
-    background-color: #1E1E1E;
-    border: 1px solid #2D2D2D;
-    border-radius: 8px;
-    outline: none;
-    font-size: 13px;
-}
-
-QTreeWidget::item {
-    padding: 6px 4px;
-    border-bottom: 1px solid #252525;
-}
-
-QTreeWidget::item:hover {
-    background-color: #2A2A2A;
-}
-
-QTreeWidget::item:selected {
-    background-color: #3B82F6;
-    color: #FFFFFF;
-}
-
-QHeaderView::section {
-    background-color: #181818;
-    color: #A1A1AA;
-    padding: 8px;
-    border: none;
-    border-bottom: 1px solid #2D2D2D;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* Splitter handle */
-QSplitter::handle {
-    background-color: #121212;
-    width: 6px;
-}
-"""
+from scanner import ScanWorker
 
 
 class StorageVisualizer(QMainWindow):
@@ -131,40 +19,23 @@ class StorageVisualizer(QMainWindow):
         super().__init__()
         self.setWindowTitle("File Percentage Viewer")
         self.resize(1150, 700)
-        self.raw_data = None  # Cache root data
+        self.raw_data = None
+        self.active_workers = []  # Prevents thread GC crashes
         self.init_ui()
+        self.load_available_drives()
 
     def init_ui(self):
-        # Main Container
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
         main_layout = QVBoxLayout(central_widget)
         main_layout.setContentsMargins(16, 16, 16, 16)
         main_layout.setSpacing(12)
 
-        # 1. Top Header Card
-        top_card = QFrame()
-        top_card.setObjectName("Card")
-        top_layout = QHBoxLayout(top_card)
-        top_layout.setContentsMargins(12, 8, 12, 8)
-
-        info_layout = QVBoxLayout()
-        lbl_title = QLabel("Storage Inspector")
-        lbl_title.setObjectName("Title")
-        
-        self.lbl_status = QLabel("Select a folder or drive to visualize disk usage")
-        self.lbl_status.setObjectName("Status")
-        
-        info_layout.addWidget(lbl_title)
-        info_layout.addWidget(self.lbl_status)
-
-        self.btn_select = QPushButton("Browse Folder")
-        self.btn_select.setObjectName("BrowseBtn")
-        self.btn_select.clicked.connect(self.choose_folder)
-
-        top_layout.addLayout(info_layout, stretch=1)
-        top_layout.addWidget(self.btn_select, alignment=Qt.AlignmentFlag.AlignVCenter)
-        main_layout.addWidget(top_card)
+        # Header Card
+        self.header_card = HeaderCard()
+        self.header_card.drive_changed.connect(self.start_scan)
+        self.header_card.reset_scope_clicked.connect(self.reset_to_global)
+        main_layout.addWidget(self.header_card)
 
         # Progress Bar
         self.progress_bar = QProgressBar()
@@ -173,22 +44,18 @@ class StorageVisualizer(QMainWindow):
         self.progress_bar.hide()
         main_layout.addWidget(self.progress_bar)
 
-        # 2. Main Content Splitter (Tree + Chart)
+        # Main Content Splitter
         splitter = QSplitter(Qt.Orientation.Horizontal)
+        splitter.setChildrenCollapsible(False)
 
         # Tree View
-        self.tree = QTreeWidget()
-        self.tree.setHeaderLabels(["Name", "Size", "Usage Visual", "Share"])
-        self.tree.header().setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        self.tree.header().setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
-        self.tree.header().setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        self.tree.header().setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
-        
-        # Connect single-click item selection to chart update
-        self.tree.itemClicked.connect(self.on_item_clicked)
+        self.tree = StorageTreeWidget()
+        self.tree.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.tree.node_selected.connect(self.on_node_selected)
+        self.tree.folder_clicked.connect(self.scan_subfolder)
         splitter.addWidget(self.tree)
 
-        # Donut Chart Container Frame
+        # Chart Card
         chart_card = QFrame()
         chart_card.setObjectName("Card")
         chart_layout = QVBoxLayout(chart_card)
@@ -202,87 +69,127 @@ class StorageVisualizer(QMainWindow):
         chart_layout.addWidget(self.chart_canvas, stretch=1)
         splitter.addWidget(chart_card)
 
+        # Lock layout proportions and expansion factors
         splitter.setSizes([650, 450])
+        splitter.setStretchFactor(0, 1)
+        splitter.setStretchFactor(1, 0)
+
         main_layout.addWidget(splitter, stretch=1)
 
-    def choose_folder(self):
-        folder = QFileDialog.getExistingDirectory(self, "Select Folder to Scan", "C:\\")
-        if folder:
-            self.start_scan(folder)
-
-    def start_scan(self, path):
-        self.btn_select.setEnabled(False)
-        self.progress_bar.show()
-        self.tree.clear()
-        self.lbl_status.setText(f"Scanning directory: {path}")
-
-        self.worker = ScanWorker(path)
-        self.worker.progress.connect(lambda p: self.lbl_status.setText(p))
-        self.worker.finished.connect(self.on_scan_finished)
-        self.worker.start()
-
-    def on_scan_finished(self, data):
-        self.progress_bar.hide()
-        self.btn_select.setEnabled(True)
-        self.lbl_status.setText(f"Active Path: {data['path']}")
-        self.raw_data = data  # Store full scan data
-
-        total_size = data['size'] if data['size'] > 0 else 1
-        sorted_children = sorted(data['children'], key=lambda x: x['size'], reverse=True)
-
-        for child in sorted_children:
-            pct = (child['size'] / total_size) * 100
-            size_mb = child['size'] / (1024 * 1024)
-
-            bar_len = int(pct / 2.5)
-            bar_str = "█" * bar_len + "░" * (40 - bar_len)
-
-            item = QTreeWidgetItem([
-                f"{'📁' if child['is_dir'] else '📄'}  {child['name']}",
-                f"{size_mb:.2f} MB",
-                bar_str,
-                f"{pct:.2f}%"
-            ])
-
-            # Attach raw item dictionary to tree node for access on click
-            item.setData(0, Qt.ItemDataRole.UserRole, child)
-
-            if pct > 20:
-                item.setForeground(3, QColor("#EF4444"))
-                item.setForeground(2, QColor("#EF4444"))
-            elif pct > 5:
-                item.setForeground(3, QColor("#F59E0B"))
-                item.setForeground(2, QColor("#F59E0B"))
-            else:
-                item.setForeground(3, QColor("#10B981"))
-
-            self.tree.addTopLevelItem(item)
-
-        self.lbl_chart_title.setText("Capacity Share (Root Level)")
-        self.chart_canvas.update_pie_chart(sorted_children, total_size)
-
-    def on_item_clicked(self, item, column):
-        node_data = item.data(0, Qt.ItemDataRole.UserRole)
-        if not node_data:
+    def scan_subfolder(self, node_data: dict, tree_item: QTreeWidgetItem):
+        """Triggers a background scan for the subfolder and updates tree & chart."""
+        # If folder is already scanned, directly populate tree & chart
+        if node_data.get('scanned') and node_data.get('children'):
+            self.tree.populate_tree(node_data, parent_item=tree_item)
+            self._update_chart_for_folder(node_data)
             return
 
-        # If it's a directory with scanned child items, show its breakdown
-        if node_data.get('is_dir') and node_data.get('children'):
+        self.progress_bar.show()
+        self.lbl_chart_title.setText(f"Breakdown: {node_data['name']}")
+
+        # Start multi-threaded scan and hold worker reference safely
+        worker = ScanWorker(node_data['path'])
+        self.active_workers.append(worker)
+
+        worker.finished.connect(
+            lambda result, w=worker: self.on_subfolder_scan_finished(result, node_data, tree_item, w)
+        )
+        worker.start()
+
+    def on_subfolder_scan_finished(self, scan_result: dict, original_node: dict, tree_item: QTreeWidgetItem, worker: ScanWorker):
+        if worker in self.active_workers:
+            self.active_workers.remove(worker)
+
+        if not self.active_workers:
+            self.progress_bar.hide()
+
+        # Mark node as scanned and assign newly fetched subfolder children
+        original_node['children'] = scan_result['children']
+        original_node['scanned'] = True
+
+        # Render subfolder items under the target tree item
+        self.tree.populate_tree(scan_result, parent_item=tree_item)
+
+        # Update chart
+        self._update_chart_for_folder(original_node)
+
+    def _update_chart_for_folder(self, node_data: dict):
+        """Helper to refresh pie chart on subfolder selection."""
+        if node_data.get('children'):
             children = node_data['children']
             dir_size = node_data['size'] if node_data['size'] > 0 else 1
             sorted_children = sorted(children, key=lambda x: x['size'], reverse=True)
-            
-            self.lbl_chart_title.setText(f"Capacity Share: {node_data['name']}")
+
+            self.lbl_chart_title.setText(f"Folder Weightage: {node_data['name']}")
             self.chart_canvas.update_pie_chart(sorted_children, dir_size)
-        
-        # If it's a single file or empty folder, highlight its contribution against total size
+
+    def load_available_drives(self):
+        drives = []
+        if sys.platform == 'win32':
+            for letter in string.ascii_uppercase:
+                drive = f"{letter}:\\"
+                if os.path.exists(drive):
+                    drives.append(drive)
+        else:
+            drives = ["/"]
+
+        self.header_card.set_drives(drives)
+        if drives:
+            self.start_scan(drives[0])
+
+    def start_scan(self, path: str):
+        if not path:
+            return
+
+        self.header_card.set_busy(True)
+        self.progress_bar.show()
+        self.tree.clear()
+        self.header_card.set_status(f"Scanning drive: {path}")
+
+        worker = ScanWorker(path)
+        self.active_workers.append(worker)
+        worker.progress.connect(self.header_card.set_status)
+        worker.finished.connect(
+            lambda data, w=worker: self.on_scan_finished(data, w)
+        )
+        worker.start()
+
+    def on_scan_finished(self, data: dict, worker: ScanWorker):
+        if worker in self.active_workers:
+            self.active_workers.remove(worker)
+
+        if not self.active_workers:
+            self.progress_bar.hide()
+
+        self.header_card.set_busy(False)
+        self.header_card.set_status(f"Active Drive: {data['path']}")
+        self.raw_data = data
+
+        self.tree.populate_tree(data)
+        self.reset_to_global()
+
+    def reset_to_global(self):
+        """Resets pie chart to show global drive root level share."""
+        if not self.raw_data:
+            return
+
+        total_size = self.raw_data['size'] if self.raw_data['size'] > 0 else 1
+        sorted_children = sorted(self.raw_data['children'], key=lambda x: x['size'], reverse=True)
+
+        self.lbl_chart_title.setText(f"Global Scope Share ({self.raw_data['path']})")
+        self.chart_canvas.update_pie_chart(sorted_children, total_size)
+
+    def on_node_selected(self, node_data: dict):
+        """Updates pie chart weightage based on clicked directory or file."""
+        if node_data.get('is_dir') and node_data.get('children'):
+            self._update_chart_for_folder(node_data)
         else:
             total_size = self.raw_data['size'] if self.raw_data and self.raw_data['size'] > 0 else 1
             item_size = node_data['size']
-            
+
             single_item_data = [
                 {'name': node_data['name'], 'size': item_size},
-                {'name': 'Rest of Directory', 'size': max(0, total_size - item_size)}
+                {'name': 'Rest of Drive', 'size': max(0, total_size - item_size)}
             ]
             self.lbl_chart_title.setText(f"File Share: {node_data['name']}")
             self.chart_canvas.update_pie_chart(single_item_data, total_size)
@@ -291,7 +198,7 @@ class StorageVisualizer(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyleSheet(DARK_THEME_QSS)
-    
+
     win = StorageVisualizer()
     win.show()
     sys.exit(app.exec())

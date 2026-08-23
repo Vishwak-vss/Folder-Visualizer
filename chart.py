@@ -3,28 +3,37 @@ import matplotlib
 matplotlib.use('QtAgg')
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from PyQt6.QtWidgets import QSizePolicy
 
 
 class StorageChartCanvas(FigureCanvas):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
+    def __init__(self, parent=None, width=4, height=4, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi, facecolor='#1E1E1E')
         self.ax = self.fig.add_subplot(111)
         super().__init__(self.fig)
         self.setParent(parent)
 
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.setMinimumSize(250, 250)
+
+    def _truncate_label(self, name: str, max_len: int = 15) -> str:
+        """Truncates long folder/file names so the legend remains compact."""
+        if len(name) > max_len:
+            return f"{name[:max_len - 3]}..."
+        return name
+
     def update_pie_chart(self, items, total_size):
         self.ax.clear()
-        
+
         if not items or total_size <= 0:
             self.draw()
             return
 
-        # 1. Top items + "Others"
         display_items = []
         other_size = 0
 
         for i, item in enumerate(items):
-            if i < 6:
+            if i < 5:
                 display_items.append({
                     'name': item['name'],
                     'true_size': item['size'],
@@ -40,81 +49,53 @@ class StorageChartCanvas(FigureCanvas):
                 'true_pct': (other_size / total_size) * 100
             })
 
-        # 2. Visual Minimum Floor of 5%
         MIN_PCT = 5.0
         visual_pcts = [max(item['true_pct'], MIN_PCT) for item in display_items]
         visual_sum = sum(visual_pcts)
         visual_sizes = [(v / visual_sum) * 100 for v in visual_pcts]
 
-        colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#64748B']
+        colors = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899']
 
-        # 3. Render Donut Slices
-        wedges, _ = self.ax.pie(
+        # Draw donut chart with internal percentage labels
+        wedges, texts = self.ax.pie(
             visual_sizes,
+            labels=[f"{item['true_pct']:.1f}%" for item in display_items],
+            labeldistance=0.75,
             startangle=140,
             colors=colors[:len(visual_sizes)],
-            wedgeprops=dict(width=0.45, edgecolor='#1E1E1E', linewidth=2)
+            wedgeprops=dict(width=0.45, edgecolor='#1E1E1E', linewidth=2),
+            textprops=dict(color="#FFFFFF", fontsize=8, fontweight='bold', ha='center', va='center')
         )
 
-        # 4. Calculate initial positions for annotations
-        annotations = []
-        for i, p in enumerate(wedges):
-            ang = (p.theta2 - p.theta1) / 2.0 + p.theta1
-            rad = np.deg2rad(ang)
-            
-            # Point on slice edge
-            x_slice = np.cos(rad)
-            y_slice = np.sin(rad)
-            
-            # Default text position
-            x_text = 1.35 * x_slice
-            y_text = 1.35 * y_slice
-            
-            label = f"{display_items[i]['name']} ({display_items[i]['true_pct']:.3f}%)"
-            annotations.append({
-                'label': label,
-                'slice_pos': (x_slice, y_slice),
-                'text_pos': [x_text, y_text],
-                'x_dir': 1 if x_text >= 0 else -1
-            })
-
-        # 5. Anti-Collision: Push overlapping labels upward/downward on Y-axis
-        MIN_Y_DIST = 0.18
         
-        # Resolve collisions on right side (x >= 0) and left side (x < 0) separately
-        for side in [1, -1]:
-            side_nodes = [a for a in annotations if a['x_dir'] == side]
-            # Sort vertically bottom to top
-            side_nodes.sort(key=lambda a: a['text_pos'][1])
-            
-            for k in range(1, len(side_nodes)):
-                prev_y = side_nodes[k - 1]['text_pos'][1]
-                curr_y = side_nodes[k]['text_pos'][1]
-                
-                if (curr_y - prev_y) < MIN_Y_DIST:
-                    side_nodes[k]['text_pos'][1] = prev_y + MIN_Y_DIST
+    
+        
 
-        # 6. Render Native Matplotlib Annotations with Leader Lines
-        for a in annotations:
-            ha = "left" if a['x_dir'] == 1 else "right"
-            
-            self.ax.annotate(
-                a['label'],
-                xy=a['slice_pos'],
-                xytext=a['text_pos'],
-                horizontalalignment=ha,
-                verticalalignment="center",
-                color="#E0E0E0",
-                fontsize=9,
-                fontweight='bold',
-                arrowprops=dict(
-                    arrowstyle="-",
-                    color="#64748B",
-                    connectionstyle="angle,angleA=0,angleB=90,rad=5",
-                    linewidth=1
-                )
-            )
+        if {item['true_size'] > 1024 * 1024 * 1024 for item in display_items}:
+            legend_labels = [
+                f"{self._truncate_label(item['name'])} ({item['true_size'] / (1024 * 1024 * 1024):.1f} GB)"
+                for item in display_items
+            ]
+        else:
+            legend_labels = [
+                f"{self._truncate_label(item['name'])} ({item['true_size'] / (1024 * 1024):.1f} MB)"
+                for item in display_items
+            ]
+        # Add embedded legend contained strictly within canvas bounds
+        legend = self.ax.legend(
+            wedges,
+            legend_labels,
+            loc="lower center",
+            bbox_to_anchor=(0.5, -0.15),
+            ncol=2,
+            frameon=False,
+            fontsize=8,
+            handletextpad=0.5,
+            columnspacing=1.0
+        )
+        
+        for text in legend.get_texts():
+            text.set_color("#E0E0E0")
 
-        self.ax.set_title("", color="#FFFFFF", fontsize=12, pad=15, fontweight='bold')
         self.fig.tight_layout()
         self.draw()
