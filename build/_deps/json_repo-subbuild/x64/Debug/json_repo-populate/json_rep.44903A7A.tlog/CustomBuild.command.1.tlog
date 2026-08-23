@@ -1,0 +1,162 @@
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-MKDIR.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -Dcfgdir=/Debug -P C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/tmp/json_repo-populate-mkdirs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-DOWNLOAD.RULE
+setlocal
+cd C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/download-json_repo-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE -P C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/verify-json_repo-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-UPDATE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-PATCH.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-COPYFILE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E copy_if_different C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json.hpp C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-src
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-copyfile
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-CONFIGURE.RULE
+setlocal
+cd C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\json_repo-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-BUILD.RULE
+setlocal
+cd C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\json_repo-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-INSTALL.RULE
+setlocal
+cd C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\json_repo-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\AC00ADBC6995F7FED7E16E805459939D\JSON_REPO-POPULATE-TEST.RULE
+setlocal
+cd C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\json_repo-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-test
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\D859493FBBBDABDE6384A79AFC8A178D\JSON_REPO-POPULATE-COMPLETE.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -E make_directory C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/Debug/json_repo-populate-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files\CMake\bin\cmake.exe" -E touch C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/json_repo-populate-prefix/src/json_repo-populate-stamp/Debug/json_repo-populate-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKEFILES\0F653FEC4CA84BFFC02B1A8FB4EFC5C2\JSON_REPO-POPULATE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\VISHWAK\DESKTOP\PROJECTS\FILE-PERCENTAGE-VIEWER\BUILD\_DEPS\JSON_REPO-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild -BC:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild --check-stamp-file C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

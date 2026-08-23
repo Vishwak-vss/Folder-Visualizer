@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\webview2_sdk-subbuild\CMakeFiles\ae6019f6dee2bbe4773d058386fd205a\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{704CEF31-249B-3AF6-8577-D63D6E69E803}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

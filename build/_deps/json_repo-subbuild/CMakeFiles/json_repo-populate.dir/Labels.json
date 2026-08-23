@@ -1,0 +1,49 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/json_repo-populate"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/0f653fec4ca84bffc02b1a8fb4efc5c2/json_repo-populate.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/d859493fbbbdabde6384a79afc8a178d/json_repo-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-copyfile.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ac00adbc6995f7fed7e16e805459939d/json_repo-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"json_repo-populate"
+		],
+		"name" : "json_repo-populate"
+	}
+}

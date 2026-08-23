@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\73f217a2da0a7942d5b11b6ca27d99f2\wil-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\1b6f1039da84b7f127a23df1f5f3f108\wil-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\88fb8f05e1cbe0bd71ac4489de7f3f62\wil-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\Vishwak\Desktop\Projects\file-percentage-viewer\build\_deps\wil-subbuild\CMakeFiles\wil-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{8E78BE9A-E601-363C-B05E-BC52C6122EBF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

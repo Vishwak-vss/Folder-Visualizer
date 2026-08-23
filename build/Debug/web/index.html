@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background-color: #121212; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        
+        .toolbar { display: flex; gap: 10px; padding: 12px; background: #1e1e1e; align-items: center; }
+        button { background: #2d2d2d; color: white; border: 1px solid #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #3d3d3d; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        input[type="text"] { flex: 1; background: #2d2d2d; color: white; border: 1px solid #444; padding: 8px; border-radius: 4px; outline: none; }
+        
+        .path-bar { padding: 8px 16px; background: #181818; color: #80d8ff; font-size: 13px; text-align: center; border-bottom: 1px solid #282828; }
+        
+        .chart-container { flex: 1; position: relative; display: flex; justify-content: center; align-items: center; }
+        canvas { cursor: pointer; }
+        
+        .center-label { position: absolute; pointer-events: none; text-align: center; max-width: 200px; }
+        .center-label .name { font-size: 16px; font-weight: bold; color: #fff; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .center-label .size { font-size: 14px; color: #00e5ff; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <button id="btnBack" disabled onclick="goBack()">⬅ Back</button>
+        <input type="text" id="txtPath" placeholder="Enter path...">
+        <button id="btnScan" onclick="triggerScan()">Scan</button>
+    </div>
+
+    <div class="path-bar" id="lblCurrentPath">Ready</div>
+
+    <div class="chart-container">
+        <canvas id="donutCanvas"></canvas>
+        <div class="center-label">
+            <div class="name" id="lblCenterName"></div>
+            <div class="size" id="lblCenterSize"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentData = null;
+        let historyStack = [];
+        let hoveredChild = null;
+
+        const canvas = document.getElementById('donutCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Color Spectrum Logic: Red (Heavy), Blue (Medium), Green (Light)
+        function getHeatColor(fraction) {
+            if (fraction >= 0.35) {
+                // Red Spectrum
+                const l = 52 - (fraction - 0.35) * 30;
+                return `hsl(0, 85%, ${l}%)`;
+            } else if (fraction >= 0.10) {
+                // Blue Spectrum
+                const l = 50 + (fraction - 0.10) * 20;
+                return `hsl(208, 80%, ${l}%)`;
+            } else {
+                // Green Spectrum
+                const l = 45 + fraction * 30;
+                return `hsl(138, 70%, ${l}%)`;
+            }
+        }
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+            drawChart();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function drawChart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!currentData || !currentData.children || currentData.children.length === 0) {
+                updateCenterText("No items", "");
+                return;
+            }
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const outerRadius = Math.min(canvas.width, canvas.height) / 2 - 40;
+            const innerRadius = outerRadius * 0.55;
+            const totalSize = currentData.size;
+
+            if (totalSize === 0) return;
+
+            let startAngle = -Math.PI / 2;
+
+            for (let child of currentData.children) {
+                const fraction = child.size / totalSize;
+                const sliceAngle = fraction * 2 * Math.PI;
+                const endAngle = startAngle + sliceAngle;
+
+                const isHovered = (hoveredChild && hoveredChild.name === child.name);
+                const currentOuter = isHovered ? outerRadius + 10 : outerRadius;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, currentOuter, startAngle, endAngle, false);
+                ctx.arc(centerX, centerY, innerRadius, endAngle, startAngle, true);
+                ctx.closePath();
+
+                ctx.fillStyle = child.isOthers ? "#4a5568" : getHeatColor(fraction);
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = "#121212";
+                ctx.stroke();
+
+                startAngle = endAngle;
+            }
+
+            if (hoveredChild) {
+                const pct = ((hoveredChild.size / totalSize) * 100).toFixed(1);
+                updateCenterText(hoveredChild.name, `${formatBytes(hoveredChild.size)} (${pct}%)`);
+            } else {
+                updateCenterText(currentData.name, formatBytes(currentData.size));
+            }
+        }
+
+        function updateCenterText(name, size) {
+            document.getElementById('lblCenterName').innerText = name || "";
+            document.getElementById('lblCenterSize').innerText = size || "";
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!currentData || !currentData.children) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const dx = mx - centerX;
+            const dy = my - centerY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            const outerRadius = Math.min(canvas.width, canvas.height) / 2 - 40;
+            const innerRadius = outerRadius * 0.55;
+
+            if (dist >= innerRadius && dist <= outerRadius + 12) {
+                let angle = Math.atan2(dy, dx) + Math.PI / 2;
+                if (angle < 0) angle += 2 * Math.PI;
+
+                let currentAngle = 0;
+                let found = null;
+                for (let child of currentData.children) {
+                    const sliceAngle = (child.size / currentData.size) * 2 * Math.PI;
+                    if (angle >= currentAngle && angle <= currentAngle + sliceAngle) {
+                        found = child;
+                        break;
+                    }
+                    currentAngle += sliceAngle;
+                }
+                hoveredChild = found;
+            } else {
+                hoveredChild = null;
+            }
+            drawChart();
+        });
+
+        canvas.addEventListener('click', () => {
+            if (hoveredChild && !hoveredChild.isFile && !hoveredChild.isOthers) {
+                historyStack.push(currentData);
+                document.getElementById('btnBack').disabled = false;
+                currentData = hoveredChild;
+                hoveredChild = null;
+                document.getElementById('lblCurrentPath').innerText = currentData.path;
+                drawChart();
+            }
+        });
+
+        function goBack() {
+            if (historyStack.length > 0) {
+                currentData = historyStack.pop();
+                document.getElementById('btnBack').disabled = (historyStack.length === 0);
+                document.getElementById('lblCurrentPath').innerText = currentData.path;
+                drawChart();
+            }
+        }
+
+        function triggerScan() {
+            const path = document.getElementById('txtPath').value;
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage(JSON.stringify({ command: "scan", path: path }));
+            }
+        }
+
+        // Native C++ Callback Receiver
+        if (window.chrome && window.chrome.webview) {
+            window.chrome.webview.addEventListener('message', event => {
+                const data = event.data;
+                if (data.type === "scanResult") {
+                    historyStack = [];
+                    document.getElementById('btnBack').disabled = true;
+                    currentData = data.payload;
+                    document.getElementById('txtPath').value = currentData.path;
+                    document.getElementById('lblCurrentPath').innerText = currentData.path;
+                    resizeCanvas();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

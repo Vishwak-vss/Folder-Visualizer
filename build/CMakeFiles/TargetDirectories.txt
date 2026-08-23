@@ -1,0 +1,3 @@
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/CMakeFiles/StorageVisualizer.dir
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/CMakeFiles/ZERO_CHECK.dir

@@ -1,0 +1,3 @@
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/json_repo-populate.dir
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/Vishwak/Desktop/Projects/file-percentage-viewer/build/_deps/json_repo-subbuild/CMakeFiles/ZERO_CHECK.dir
