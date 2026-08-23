@@ -18,17 +18,17 @@ A fast, multithreaded desktop application for visualizing disk usage, file perce
 
 ```text
 file-percentage-viewer/
-├── native_scanner/          # Rust Native Accelerator Module
-│   ├── Cargo.toml           # Rust dependencies & pyo3 bindings
-│   ├── pyproject.toml       # Maturin build configuration
-│   └── src/
-│       └── lib.rs           # Rust multithreaded directory traversal engine
 ├── chart.py                 # File percentage visualization chart widget
 ├── header_card.py           # Summary statistics and header card UI
 ├── main.py                  # Main application window & entry point
 ├── progress_delegate.py     # Custom QStyledItemDelegate for inline progress bars
 ├── scanner.py               # PyQt QThread worker wrapper (ScanWorker)
+├── folder_scanner.cpp
 ├── styles.py                # Application styling & QSS themes
 ├── tree_widget.py           # Custom QTreeWidget for file/folder hierarchies
 └── requirements.txt         # Python dependency manifest
 
+# Run these commands
+g++ -O3 -shared -o folder_scanner.dll folder_scanner.cpp     -static -static-libgcc -static-libstdc++
+pip install PyQt6 matplotlib adjustText
+py main.py
