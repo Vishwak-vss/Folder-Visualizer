@@ -31,8 +31,9 @@ file-percentage-viewer/
 └── requirements.txt         # Python dependency manifest
 ```
 # Run these commands
+```text
 g++ -O3 -shared -o folder_scanner.dll folder_scanner.cpp     -static -static-libgcc -static-libstdc++
 pip install PyQt6 matplotlib adjustText
 py main.py
-
+```
 # This project is under MIT Licence
