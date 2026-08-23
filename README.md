@@ -1,8 +1,34 @@
+# ⚡ High-Performance File & Disk Space Analyzer
+
+A fast, multithreaded desktop application for visualizing disk usage, file percentage breakdowns, and directory trees. Built with **PyQt6** for a responsive user interface and powered by a high-performance **Rust native extension (`pyo3` + `rayon`)** for near-instantaneous directory scanning.
+
+---
+
+## 🚀 Features
+
+- **Blazing Fast Scanning:** Multi-threaded parallel directory traversal powered by Rust (`rayon` + `walkdir`).
+- **GIL-Free Multi-Threading:** Rust bypasses Python's Global Interpreter Lock (GIL) to utilize all available CPU cores.
+- **Decomposed UI Component Architecture:** Modular components for tree visualization, breakdown charts, summary cards, and custom progress delegates.
+- **Non-Blocking Background Threads:** Scanning runs on separate `QThread` workers (`scanner.py`) to keep the interface smooth and responsive.
+- **Cross-Version Binary:** Compiled with Python Stable ABI (`abi3`) for compatibility across Python versions.
+
+---
+
+## 🏗 Project Architecture
+
+```text
 file-percentage-viewer/
-│
-├── styles.py           # Application QSS stylesheet
-├── header_card.py      # Top title, status label & browse button
-├── tree_widget.py      # Left-side tree view for file listings
-├── chart.py            # Matplotlib canvas component
-├── scanner.py          # Background ScanWorker thread
-└── main.py             # Main window orchestration hub
+├── native_scanner/          # Rust Native Accelerator Module
+│   ├── Cargo.toml           # Rust dependencies & pyo3 bindings
+│   ├── pyproject.toml       # Maturin build configuration
+│   └── src/
+│       └── lib.rs           # Rust multithreaded directory traversal engine
+├── chart.py                 # File percentage visualization chart widget
+├── header_card.py           # Summary statistics and header card UI
+├── main.py                  # Main application window & entry point
+├── progress_delegate.py     # Custom QStyledItemDelegate for inline progress bars
+├── scanner.py               # PyQt QThread worker wrapper (ScanWorker)
+├── styles.py                # Application styling & QSS themes
+├── tree_widget.py           # Custom QTreeWidget for file/folder hierarchies
+└── requirements.txt         # Python dependency manifest
+
