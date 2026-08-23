@@ -4,6 +4,8 @@ A fast, multithreaded desktop application for visualizing disk usage, file perce
 
 ---
 
+# You can use the release version and click on main.exe inside dist/main
+
 ## 🚀 Features
 
 - **Blazing Fast Scanning:** Multi-threaded parallel directory traversal powered by Rust (`rayon` + `walkdir`).

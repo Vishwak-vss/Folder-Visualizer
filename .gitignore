@@ -1,2 +1,8 @@
 native_scanner
 .vscode
+
+.dist
+
+build
+
+main.spec
