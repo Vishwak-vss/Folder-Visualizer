@@ -1,4 +1,4 @@
-# ⚡ High-Performance File & Disk Space Analyzer
+# High-Performance File & Disk Space Analyzer
 
 A fast, multithreaded desktop application for visualizing disk usage, file percentage breakdowns, and directory trees. Built with **PyQt6** for a responsive user interface and powered by a high-performance **Rust native extension (`pyo3` + `rayon`)** for near-instantaneous directory scanning.
 
@@ -6,7 +6,7 @@ A fast, multithreaded desktop application for visualizing disk usage, file perce
 
 # You can use the release version and click on main.exe inside dist/main
 
-## 🚀 Features
+## Features
 
 - **Blazing Fast Scanning:** Multi-threaded parallel directory traversal powered by Rust (`rayon` + `walkdir`).
 - **GIL-Free Multi-Threading:** Rust bypasses Python's Global Interpreter Lock (GIL) to utilize all available CPU cores.
@@ -16,7 +16,7 @@ A fast, multithreaded desktop application for visualizing disk usage, file perce
 
 ---
 
-## 🏗 Project Architecture
+## Project Architecture
 
 ```text
 file-percentage-viewer/
